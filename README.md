@@ -2,7 +2,7 @@
 
 ### Re-imagining the `react-conflux` API
 
-`react-conflux` is a nice, lightweight state management library for React applications. I wanted to try to explore a possibility for the API that would reduce some of the boilerplate even further while maintaining the minimalism and simplicity of the library. To show by example the difference in the proposed API, this is from the counter app example from the `react-conflux` repo:
+[`react-conflux`](https://github.com/dustinmyers/react-conflux) is a nice, lightweight state management library for React applications. I wanted to try to explore a possibility for the API that would reduce some of the boilerplate even further while maintaining the minimalism and simplicity of the library. To show by example the difference in the proposed API, this is from the counter app example from the `react-conflux` repo:
 
 ```js
 // App.js
