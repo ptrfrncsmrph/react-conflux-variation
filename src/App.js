@@ -1,18 +1,21 @@
 import React from 'react';
-import { StateProvider } from 'react-conflux';
-import { counterReducer } from './store/reducers/counterReducer';
-import { titleReducer } from './store/reducers/titleReducer';
-import { CounterContext, TitleContext } from './store/contexts';
+import makeStateContext from 'react-conflux';
+import { counterReducer } from 'store/reducers/counterReducer';
+import { titleReducer } from 'store/reducers/titleReducer';
 
-import Counter from './components/Counter';
+import Counter from 'components/Counter';
+
+const [CounterProvider, useCounterValue] = makeStateContext(counterReducer);
+const [TitleProvider, useTitleValue] = makeStateContext(titleReducer);
+export { useCounterValue, useTitleValue };
 
 const App = () => {
   return (
-    <StateProvider reducer={counterReducer} StateContext={CounterContext}>
-      <StateProvider reducer={titleReducer} StateContext={TitleContext}>
+    <CounterProvider>
+      <TitleProvider>
         <Counter />
-      </StateProvider>
-    </StateProvider>
+      </TitleProvider>
+    </CounterProvider>
   );
 };
 

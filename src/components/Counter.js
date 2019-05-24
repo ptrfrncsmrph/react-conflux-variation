@@ -1,22 +1,24 @@
 import React from 'react';
-import { useStateValue } from 'react-conflux';
-import { CounterContext, TitleContext } from '../store/contexts';
-import { INCREMENT, DECREMENT } from '../store/constants';
+import { INCREMENT, DECREMENT, SET_TITLE } from 'store/constants';
+import { useCounterValue, useTitleValue } from 'App';
 
 const Counter = () => {
-  const [counterState, counterDispatch] = useStateValue(CounterContext);
-  const [titleState] = useStateValue(TitleContext);
-  const increment = e => {
-    e.preventDefault();
-    counterDispatch({ type: INCREMENT, payload: counterState.count + 1 });
+  const [counterState, counterDispatch] = useCounterValue();
+  const [titleState, titleDispatch] = useTitleValue();
+  const increment = _e => {
+    counterDispatch({ type: INCREMENT });
   };
-  const decrement = e => {
-    e.preventDefault();
-    counterDispatch({ type: DECREMENT, payload: counterState.count - 1 });
+  const decrement = _e => {
+    counterDispatch({ type: DECREMENT });
   };
+  const setTitle = e => {
+    titleDispatch({ type: SET_TITLE, payload: e.target.value });
+  };
+
   return (
     <div>
       <h1>{titleState.title}</h1>
+      <input onChange={setTitle} value={titleState.title} />
       <p>This is the count from the counterReducer: {counterState.count}</p>
       <button type="button" onClick={increment}>
         Increase
