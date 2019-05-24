@@ -1,68 +1,74 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+🚧 **This is a very rough proof-of-concept.**
 
-## Available Scripts
+### Re-imagining the `react-conflux` API
 
-In the project directory, you can run:
+`react-conflux` is a nice, lightweight state management library for React applications. I wanted to try to explore a possibility for the API that would reduce some of the boilerplate even further while maintaining the minimalism and simplicity of the library. To show by example the difference in the proposed API, this is from the counter app example from the `react-conflux` repo:
 
-### `npm start`
+```js
+// App.js
+import React from "react"
+import { StateProvider } from "react-conflux"
+import { counterReducer } from "store/reducers/counterReducer"
+import { titleReducer } from "store/reducers/titleReducer"
+import { CounterContext, TitleContext } from "store/contexts"
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+import Counter from "./components/Counter"
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+const App = () => {
+  return (
+    <StateProvider reducer={counterReducer} StateContext={CounterContext}>
+      <StateProvider reducer={titleReducer} StateContext={TitleContext}>
+        <Counter />
+      </StateProvider>
+    </StateProvider>
+  )
+}
 
-### `npm test`
+export default App
+```
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+With the re-imagined API this might be:
 
-### `npm run build`
+```diff
+  import React from 'react';
+- import { StateProvider } from 'react-conflux';
++ import makeStateContext from 'react-conflux';
+  import { counterReducer } from 'store/reducers/counterReducer';
+  import { titleReducer } from 'store/reducers/titleReducer';
+- import { CounterContext, TitleContext } from 'store/contexts';
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+  import Counter from 'components/Counter';
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
++ const [CounterProvider, useCounterValue] = makeStateContext(counterReducer);
++ const [TitleProvider, useTitleValue] = makeStateContext(titleReducer);
++ export { useCounterValue, useTitleValue };
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+  const App = () => {
+    return (
+-     <StateProvider reducer={counterReducer} StateContext={CounterContext}>
+-       <StateProvider reducer={titleReducer} StateContext={TitleContext}>
++     <CounterProvider>
++       <TitleProvider>
+          <Counter />
+-       </StateProvider>
+-     </StateProvider>
++       </TitleProvider>
++     </CounterProvider>
+    );
+  };
 
-### `npm run eject`
+  export default App;
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+At the `App.js` level, the reduction in boilerplate isn't immediately obvious, in fact it adds a total of two lines. The benefit though is that there is no need to create your own contexts as you would with the former example; the `store/contexts` directory and user calls to `React.createContext` can be completely extracted and taken care of by the library code.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+There is also no need to import the context instance at any consumer components, as that's already captured in `useCounterValue` for example.
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+To visualize the difference in terms of dependencies between files, the original API might play out like so
+![](./diagrams/Artboard1.png)
+The reimagined API dependencies might look like
+![](./diagrams/Artboard2.png)
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Todo:
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+- I'm not sure what the implications are for performance, haven't tested this beyond the super-simple app found in this repo
