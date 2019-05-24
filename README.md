@@ -29,6 +29,34 @@ export default App
 
 With the re-imagined API this might be:
 
+```js
+import React from "react"
+import makeStateContext from "react-conflux"
+import { counterReducer } from "store/reducers/counterReducer"
+import { titleReducer } from "store/reducers/titleReducer"
+
+import Counter from "components/Counter"
+
+const [CounterProvider, useCounterValue] = makeStateContext(counterReducer)
+const [TitleProvider, useTitleValue] = makeStateContext(titleReducer)
+export { useCounterValue, useTitleValue }
+
+const App = () => {
+  return (
+    <CounterProvider>
+      <TitleProvider>
+        <Counter />
+      </TitleProvider>
+    </CounterProvider>
+  )
+}
+
+export default App
+```
+
+<details>
+<summary>The diff</summary>
+
 ```diff
   import React from 'react';
 - import { StateProvider } from 'react-conflux';
@@ -59,6 +87,9 @@ With the re-imagined API this might be:
 
   export default App;
 ```
+
+</details>
+<br/>
 
 At the `App.js` level, the reduction in boilerplate isn't immediately obvious, in fact it adds a total of two lines. The benefit though is that there is no need to create your own contexts as you would with the former example; the `store/contexts` directory and user calls to `React.createContext` can be completely extracted and taken care of by the library code.
 
