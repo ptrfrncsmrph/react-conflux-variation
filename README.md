@@ -31,14 +31,14 @@ With the re-imagined API this might be:
 
 ```js
 import React from "react"
-import makeStateContext from "react-conflux"
+import createConflux from "react-conflux"
 import { counterReducer } from "store/reducers/counterReducer"
 import { titleReducer } from "store/reducers/titleReducer"
 
 import Counter from "components/Counter"
 
-const [CounterProvider, useCounterValue] = makeStateContext(counterReducer)
-const [TitleProvider, useTitleValue] = makeStateContext(titleReducer)
+const [CounterProvider, useCounterValue] = createConflux(counterReducer)
+const [TitleProvider, useTitleValue] = createConflux(titleReducer)
 export { useCounterValue, useTitleValue }
 
 const App = () => {
@@ -60,15 +60,15 @@ export default App
 ```diff
   import React from 'react';
 - import { StateProvider } from 'react-conflux';
-+ import makeStateContext from 'react-conflux';
++ import createConflux from 'react-conflux';
   import { counterReducer } from 'store/reducers/counterReducer';
   import { titleReducer } from 'store/reducers/titleReducer';
 - import { CounterContext, TitleContext } from 'store/contexts';
 
   import Counter from 'components/Counter';
 
-+ const [CounterProvider, useCounterValue] = makeStateContext(counterReducer);
-+ const [TitleProvider, useTitleValue] = makeStateContext(titleReducer);
++ const [CounterProvider, useCounterValue] = createConflux(counterReducer);
++ const [TitleProvider, useTitleValue] = createConflux(titleReducer);
 + export { useCounterValue, useTitleValue };
 
   const App = () => {
