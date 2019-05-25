@@ -6,11 +6,14 @@ import {
   useContext
 } from 'react';
 
-export default function makeStateContext(reducer) {
+const id = x => x;
+
+export default function createConflux(reducer) {
   const StateContext = createContext();
 
-  const useStateValue = () => {
-    return useContext(StateContext);
+  const useStateValue = (selector = id) => {
+    const [state, dispatch] = useContext(StateContext);
+    return [selector(state), dispatch];
   };
 
   const StateProvider = ({ children }) => {
@@ -18,12 +21,7 @@ export default function makeStateContext(reducer) {
       reducer,
       reducer(undefined, { type: '@@INIT' })
     );
-    const value = useMemo(
-      () => {
-        return [state, dispatch];
-      },
-      [state]
-    );
+    const value = useMemo(() => [state, dispatch], [state]);
 
     return createElement(StateContext.Provider, { value }, children);
   };

@@ -1,18 +1,36 @@
-import { INCREMENT, DECREMENT } from '../constants';
+import {
+  INCREMENT_A,
+  DECREMENT_A,
+  INCREMENT_B,
+  DECREMENT_B
+} from 'store/constants';
 
 const initialState = {
-  count: 0
+  countA: 0,
+  countB: 0
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case INCREMENT:
+    case INCREMENT_A:
       return {
-        count: state.count + 1
+        ...state,
+        countA: state.countA + 1
       };
-    case DECREMENT:
+    case DECREMENT_A:
       return {
-        count: state.count - 1
+        ...state,
+        countA: state.countA - 1
+      };
+    case INCREMENT_B:
+      return {
+        ...state,
+        countB: state.countB + 1
+      };
+    case DECREMENT_B:
+      return {
+        ...state,
+        countB: state.countB - 1
       };
     default:
       return state;

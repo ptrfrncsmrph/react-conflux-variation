@@ -1,32 +1,67 @@
-import React from 'react';
-import { INCREMENT, DECREMENT, SET_TITLE } from 'store/constants';
+import React, { useRef, useMemo } from 'react';
+import {
+  INCREMENT_A,
+  DECREMENT_A,
+  INCREMENT_B,
+  DECREMENT_B,
+  SET_TITLE
+} from 'store/constants';
 import { useCounterValue, useTitleValue } from 'App';
 
 const Counter = () => {
-  const [counterState, counterDispatch] = useCounterValue();
-  const [titleState, titleDispatch] = useTitleValue();
-  const increment = _e => {
-    counterDispatch({ type: INCREMENT });
+  const ref = useRef(0);
+  const [countA, counterDispatch] = useCounterValue(({ countA }) => countA);
+  const [{ title }, titleDispatch] = useTitleValue();
+  const increment = count => _e => {
+    counterDispatch({ type: count === 'a' ? INCREMENT_A : INCREMENT_B });
   };
-  const decrement = _e => {
-    counterDispatch({ type: DECREMENT });
+  const decrement = count => _e => {
+    counterDispatch({ type: count === 'a' ? DECREMENT_A : DECREMENT_B });
   };
   const setTitle = e => {
     titleDispatch({ type: SET_TITLE, payload: e.target.value });
   };
 
-  return (
-    <div>
-      <h1>{titleState.title}</h1>
-      <input onChange={setTitle} value={titleState.title} />
-      <p>This is the count from the counterReducer: {counterState.count}</p>
-      <button type="button" onClick={increment}>
-        Increase
-      </button>
-      <button type="button" onClick={decrement}>
-        Decrease
-      </button>
-    </div>
+  return useMemo(
+    () => (
+      <div>
+        <h3
+          style={{ color: 'tomato', fontStyle: 'italic', fontWeight: 'normal' }}
+        >
+          Renders: {ref.current++}
+        </h3>
+        <h1>{title}</h1>
+        <input onChange={setTitle} value={title} />
+        <fieldset>
+          <legend>A</legend>
+          <p>
+            This is <code>countA</code> from the <code>counterReducer</code>:{' '}
+            {countA}
+          </p>
+          <button type="button" onClick={increment('a')}>
+            +
+          </button>
+          <button type="button" onClick={decrement('a')}>
+            &minus;
+          </button>
+        </fieldset>
+        <fieldset>
+          <legend>B</legend>
+          <p>
+            The buttons below will increment or decrement <code>countB</code>,
+            but that shouldn't trigger a re-render of this component since we're
+            not rendering anything based on <code>countB</code>
+          </p>
+          <button type="button" onClick={increment('b')}>
+            +
+          </button>
+          <button type="button" onClick={decrement('b')}>
+            &minus;
+          </button>
+        </fieldset>
+      </div>
+    ),
+    [countA, title]
   );
 };
 
