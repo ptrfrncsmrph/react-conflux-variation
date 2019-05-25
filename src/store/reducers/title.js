@@ -4,7 +4,7 @@ const initialState = {
   title: 'This is the title from the titleReducer'
 };
 
-export const titleReducer = (state = initialState, action) => {
+export default (state = initialState, action) => {
   switch (action.type) {
     case SET_TITLE:
       return { title: action.payload };

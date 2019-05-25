@@ -1,7 +1,7 @@
 import React from 'react';
 import makeStateContext from 'react-conflux';
-import { counterReducer } from 'store/reducers/counterReducer';
-import { titleReducer } from 'store/reducers/titleReducer';
+import counterReducer from 'store/reducers/counter';
+import titleReducer from 'store/reducers/title';
 
 import Counter from 'components/Counter';
 
