@@ -1,4 +1,5 @@
 🚧 **This is a very rough proof-of-concept.**
+To see this example running in a CodeSandbox: https://codesandbox.io/s/19ylq
 
 ### Re-imagining the `react-conflux` API
 
